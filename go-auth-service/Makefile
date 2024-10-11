@@ -1,4 +1,4 @@
-AppName=go-auth-service-$(shell date +"%Y%m%d")
+AppName=authservice-$(shell date +"%Y%m%d")
 
 .PHONY: install
 install:

@@ -6,5 +6,5 @@ import (
 
 func main() {
 	co := core.NewCore()
-	co.Lo.Info("co", co)
+	co.Lo.Info("print.core.struct", "co", co.DSN)
 }
