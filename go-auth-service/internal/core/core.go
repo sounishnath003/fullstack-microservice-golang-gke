@@ -17,7 +17,7 @@ type Core struct {
 func NewCore() *Core {
 	return &Core{
 		PORT: getEnv("PORT", 3000).(int),
-		DSN:  getEnv("DSN", "postgres://127.0.0.1/go-auth-service?sslmode=disable").(string),
+		DSN:  getEnv("DSN", "postgres://127.0.0.1:5432/go-auth-service?sslmode=disable").(string),
 		Lo:   slog.New(slog.NewTextHandler(os.Stdout, nil)),
 	}
 }

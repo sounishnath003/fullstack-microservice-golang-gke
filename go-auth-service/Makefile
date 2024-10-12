@@ -5,7 +5,6 @@ install:
 	go mod tidy
 	go mod download
 	go mod verify
-	go run cmd/*.go
 
 .PHONY: build
 build:
