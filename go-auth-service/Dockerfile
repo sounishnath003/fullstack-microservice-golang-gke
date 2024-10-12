@@ -1,0 +1,1 @@
+FROM golang:1.23.1-slim AS builder

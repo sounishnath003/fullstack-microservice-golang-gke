@@ -9,8 +9,9 @@ install:
 .PHONY: build
 build:
 	echo "building the auth service"
-	go build -ldflags "-s -w" -o ./bin/$(AppName) cmd/*.go
+	go build -ldflags "-s -w" -o ./bin/$(AppName) main.go
 
 .PHONY: run
 run: build
+	export DSN="postgres://root:password@127.0.0.1:5432/auth?sslmode=disable"
 	./bin/$(AppName)

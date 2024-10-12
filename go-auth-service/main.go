@@ -6,8 +6,9 @@ import (
 )
 
 func main() {
+
 	co := core.NewCore()
-	co.Lo.Info("print.core.struct", "co", co.DSN)
+	co.Lo.Info("core.struct", "co", co)
 
 	server := server.NewServer(co)
 	err := server.Start()

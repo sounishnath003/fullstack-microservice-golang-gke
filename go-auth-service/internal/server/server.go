@@ -28,11 +28,17 @@ func (s *Server) Start() error {
 		AllowMethods: []string{echo.GET, echo.PUT, echo.PATCH, echo.POST},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
-	e.Use(middleware.CSRF())
 	e.Use(middleware.Gzip())
+	e.Use(middleware.Recover())
 
 	// Define routes handlers
 	e.GET("/", handlers.BasicHandler)
+	e.GET("ping", handlers.PingHandler)
+
+	// Group all handler with /api
+	api := e.Group("/api")
+	api.GET("/auth/users/:id", handlers.GetUser)
+	api.POST("/auth/signup", handlers.CreateUser)
 
 	e.Logger.Info("server has been started and running on", "port", s.port)
 	return e.Start(fmt.Sprintf(":%d", s.port))
