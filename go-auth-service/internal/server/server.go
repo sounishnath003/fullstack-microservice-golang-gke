@@ -33,7 +33,7 @@ func (s *Server) Start() error {
 	})
 	// Define other middlewares.
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:3000", "http://localhost:3001", "http://localhost:3002"},
+		AllowOrigins: []string{"http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:4200"},
 		AllowMethods: []string{echo.GET, echo.PUT, echo.PATCH, echo.POST},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
@@ -46,7 +46,7 @@ func (s *Server) Start() error {
 
 	// Group all handler with /api
 	api := e.Group("/api")
-	api.GET("/auth/users", handlers.GetAllUsers)
+	api.GET("/auth/users/:ID", handlers.GetUser)
 	api.POST("/auth/signup", handlers.CreateUser)
 
 	e.Logger.Info("server has been started and running on", "port", s.co.PORT)
