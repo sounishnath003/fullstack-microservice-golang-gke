@@ -47,7 +47,8 @@ func (s *Server) Start() error {
 	// Group all handler with /api
 	api := e.Group("/api")
 	api.GET("/auth/users/:ID", handlers.GetUser)
-	api.POST("/auth/signup", handlers.CreateUser)
+	api.POST("/auth/login", handlers.LoginHandler)
+	api.POST("/auth/signup", handlers.SignupHandler)
 
 	e.Logger.Info("server has been started and running on", "port", s.co.PORT)
 	return e.Start(fmt.Sprintf(":%d", s.co.PORT))

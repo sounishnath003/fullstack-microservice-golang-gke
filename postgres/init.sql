@@ -43,8 +43,8 @@ INSERT INTO roles (Role) VALUES ('user'), ('admin');
 
 -- insert users
 INSERT INTO users (FirstName, LastName, Username, Email, Password) VALUES 
-('sounish', 'nath', 'sounishnath003', 'sounish@gmail.com', '$2a$10$1234567890abcdef01234567890abcdef$'),
-('Admin', 'goauth', 'adminuser', 'admin@gmail.com', '$2a$10$1234567890abcdef01234567890abcdef$');
+('sounish', 'nath', 'sounishnath003', 'sounish@gmail.com', '$2a$10$6PAG8iwHx9MiQ43/kpPV5uTdzYePo55cD14GglIuDUdKt222QmzlS'),
+('Admin', 'goauth', 'adminuser', 'admin@gmail.com', '$2a$10$6PAG8iwHx9MiQ43/kpPV5uTdzYePo55cD14GglIuDUdKt222QmzlS');
 
 -- insert user roles
 INSERT INTO user_roles (UserID, RoleID) VALUES 
