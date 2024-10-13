@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"os"
 	"sync"
+	_ "github.com/lib/pq"
 
 	"github.com/sounishnath003/go-auth-service/internal/utils"
 )
@@ -21,8 +22,14 @@ func NewCore() *Core {
 	dsn := utils.GetEnv("DSN", "postgres://root:password@127.0.0.1:5432/auth?sslmode=disable").(string)
 	driver := utils.GetEnv("DRIVER", "postgres").(string)
 
+	// Check the db open.
 	db, err := sql.Open(driver, dsn)
 	if err != nil {
+		panic(err)
+	}
+
+	// Check for ping.
+	if err := db.Ping(); err != nil {
 		panic(err)
 	}
 

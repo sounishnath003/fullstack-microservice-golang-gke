@@ -28,7 +28,7 @@ func BasicHandler(c echo.Context) error {
 }
 
 func PingHandler(c echo.Context) error {
-	return c.JSON(http.StatusOK, utils.NewApiResponse(
+	return c.JSON(http.StatusOK, NewApiResponse(
 		http.StatusOK,
 		map[string]string{"message": "pong", "timestamp": time.Now().Format(time.RFC3339), "version": utils.GetEnv("K_VERSION", "v0.0.1").(string),
 			"serviceName": "go-auth-service"},
