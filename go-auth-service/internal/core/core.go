@@ -16,6 +16,7 @@ import (
 type Core struct {
 	PORT       int
 	DSN        string
+	DB         *sql.DB
 	QueryStmts *AuthServiceQueries
 	Lo         *slog.Logger
 	mu         sync.Mutex
@@ -56,8 +57,9 @@ func NewCore() *Core {
 	// Return the core.
 	return &Core{
 		PORT:       utils.GetEnv("PORT", 3000).(int),
-		JWTSecret:  utils.GetEnv("JWT_SECRET", "my5u43Rs3CR3T0k3N$!(1).*").(string),
+		DB:         db,
 		DSN:        dsn,
+		JWTSecret:  utils.GetEnv("JWT_SECRET", "my5u43Rs3CR3T0k3N$!(1).*").(string),
 		QueryStmts: &queryStmts,
 		Lo:         logger,
 	}

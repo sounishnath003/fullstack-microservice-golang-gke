@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -37,7 +38,7 @@ func GenerateNewJWTClaimToken(username, password string, hctx *HandlerContext) (
 	// Check if the password matches
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
-		return "", err
+		return "", errors.New("invalid username or password.")
 	}
 
 	claims := JwtClaims{

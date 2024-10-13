@@ -15,20 +15,18 @@ func GetUser(c echo.Context) error {
 	// Get the core
 	IDs := c.Param("ID")
 	if len(IDs) == 0 {
-		return c.JSON(http.StatusBadRequest, NewApiResponse(http.StatusBadRequest, nil, errors.New("bad request, required user id")))
+		return ErrorApiResponse(c, http.StatusBadRequest, errors.New("bad request, required user id"))
 	}
 
 	uid, err := strconv.Atoi(IDs)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, NewApiResponse(
-			http.StatusBadRequest, nil, err,
-		))
+		return ErrorApiResponse(c, http.StatusBadRequest, err)
 	}
 
 	var user User
 	hctx := c.(*HandlerContext)
 
-	hctx.GetCore().QueryStmts.GetUserByID.QueryRow(uid).Scan(&user.FirstName, &user.LastName, &user.Username)
+	hctx.GetCore().QueryStmts.GetUserByID.QueryRow(uid).Scan(&user.ID, &user.FirstName, &user.LastName, &user.Username, &user.Email, &user.Password)
 
 	return c.JSON(http.StatusOK, NewApiResponse(http.StatusOK, map[string]any{
 		"user": user,
@@ -42,7 +40,7 @@ func LoginHandler(c echo.Context) error {
 	var loginUser LoginUserDto
 	// Throws error.
 	if err := c.Bind(&loginUser); err != nil {
-		return c.JSON(http.StatusBadRequest, NewApiResponse(http.StatusBadRequest, nil, err))
+		return ErrorApiResponse(c, http.StatusInternalServerError, err)
 	}
 	// Accuquire the handler context.
 	hctx := c.(*HandlerContext)
@@ -50,7 +48,7 @@ func LoginHandler(c echo.Context) error {
 	// Set custom claims.
 	token, err := GenerateNewJWTClaimToken(loginUser.Username, loginUser.Password, hctx)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, NewApiResponse(http.StatusBadRequest, nil, err))
+		return ErrorApiResponse(c, http.StatusBadRequest, err)
 	}
 
 	return c.JSON(http.StatusOK, NewApiResponse(http.StatusOK, echo.Map{
@@ -69,6 +67,7 @@ func SignupHandler(c echo.Context) error {
 	if err := c.Bind(&newUser); err != nil {
 		return c.JSON(http.StatusBadRequest, NewApiResponse(http.StatusBadRequest, nil, err))
 	}
+	// Generate a Hash Password
 	hashPassword, err := bcrypt.GenerateFromPassword(
 		[]byte(newUser.Password),
 		bcrypt.DefaultCost,
@@ -76,20 +75,21 @@ func SignupHandler(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, NewApiResponse(http.StatusInternalServerError, nil, err))
 	}
-	// Get the core context
+	// Get the core context.
 	hctx := c.(*HandlerContext)
+
 	// Create a new entry of the user.
 	_, err = hctx.GetCore().QueryStmts.CreateNewUser.Exec(newUser.FirstName, newUser.LastName, newUser.Username, newUser.Email, string(hashPassword))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, NewApiResponse(http.StatusBadRequest, nil, err))
 	}
-	// Get User
+	// Get User ID and other info.
 	err = hctx.GetCore().QueryStmts.GetUserByUsername.QueryRow(newUser.Username).Scan(&newUser.ID, &newUser.FirstName, &newUser.LastName, &newUser.Email, &newUser.Username, &newUser.Password)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, NewApiResponse(http.StatusBadRequest, nil, err))
 	}
 
-	// Add user entry to role
+	// Add user entry to role.
 	_, err = hctx.GetCore().QueryStmts.AddUserToUserRole.Exec(newUser.ID, 1)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, NewApiResponse(http.StatusBadRequest, nil, err))
@@ -105,5 +105,9 @@ type User struct {
 	LastName  string `json:"lastName"`
 	Username  string `json:"username"`
 	Email     string `json:"email"`
-	Password  string `json:"password"`
+	Password  string `json:"-"`
+}
+
+func ErrorApiResponse(c echo.Context, status int, err error) error {
+	return c.JSON(status, NewApiResponse(status, nil, err))
 }
