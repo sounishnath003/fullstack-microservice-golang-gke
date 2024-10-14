@@ -32,7 +32,7 @@ func GenerateNewJWTClaimToken(username, password string, hctx *HandlerContext) (
 	// Check if the user. present in DB.
 	err := hctx.GetCore().QueryStmts.GetUserForJWT.QueryRow(username).Scan(&user.FirstName, &user.LastName, &user.UserName, &user.Email, &user.Password, &user.Role)
 	if err != nil {
-		return "", err
+		return "", errors.New("Invalid username or password.")
 	}
 
 	// Check if the password matches

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AuthRoutingModule } from './auth-routing.module';
-import { RouterOutlet } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 
 
 @NgModule({
@@ -10,6 +10,7 @@ import { RouterOutlet } from '@angular/router';
   imports: [
     CommonModule,
     AuthRoutingModule,
-  ]
+  ],
+  providers: [provideHttpClient()]
 })
 export class AuthModule { }
