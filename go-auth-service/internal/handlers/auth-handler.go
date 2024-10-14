@@ -138,6 +138,10 @@ func VerifyJwtTokenHandler(c echo.Context) error {
 		return ErrorApiResponse(c, http.StatusBadRequest, err)
 	}
 
+	if len(verifyUser.Username) == 0 || len(verifyUser.Email) == 0 {
+		return ErrorApiResponse(c, http.StatusUnauthorized, errors.New("Unauthorized"))
+	}
+
 	var user User
 	hctx := c.(*HandlerContext)
 
@@ -151,7 +155,7 @@ func VerifyJwtTokenHandler(c echo.Context) error {
 }
 
 type User struct {
-	ID        string `json:"id"`
+	ID        int    `json:"id"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Username  string `json:"username"`

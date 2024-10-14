@@ -19,11 +19,11 @@ type JwtCustomClaims struct {
 
 // Validate the JWT token with the auth-service.
 //
-// Returns (bool, error)
-func (jc *JwtCustomClaims) Validate(hctx *HandlerContext, token *jwt.Token) (bool, error) {
+// Returns UserID (>0) and error (int, error). if error then ID = -1
+func (jc *JwtCustomClaims) Validate(hctx *HandlerContext, token *jwt.Token) (int, error) {
 	// If token is not valid.
 	if !token.Valid {
-		return false, errors.New("invalid token")
+		return -1, errors.New("invalid token")
 	}
 	// Creating the dynamic auth endpoint url for the user verification.
 	authUrl := fmt.Sprintf("%s/api/auth/verify/%s", hctx.GetCore().AuthServiceEndpoint, token.Raw)
@@ -34,17 +34,17 @@ func (jc *JwtCustomClaims) Validate(hctx *HandlerContext, token *jwt.Token) (boo
 	}
 	payloadBytes, err := json.Marshal(payload)
 	if err != nil {
-		return false, err
+		return -1, err
 	}
 	// Grab the resp.
 	resp, err := http.Post(authUrl, "application/json", bytes.NewReader(payloadBytes))
 	// Throws err.
 	if err != nil {
-		return false, err
+		return -1, err
 	}
 	// Check for the 202 response only.
 	if resp.StatusCode != http.StatusAccepted {
-		return false, errors.New(fmt.Sprintf("%d - %s", resp.StatusCode, "Unauthorized"))
+		return -1, errors.New(fmt.Sprintf("%d - %s", resp.StatusCode, "Unauthorized"))
 	}
 
 	// Parse the resp.Body into struct.
@@ -53,7 +53,7 @@ func (jc *JwtCustomClaims) Validate(hctx *HandlerContext, token *jwt.Token) (boo
 	// Log the output.
 	hctx.GetCore().Lo.Info("user.verification", "parsed", parsed, "userid", parsed.Data.User.ID, "resp.statuscode", resp.StatusCode)
 	// Return true or false.
-	return true, nil
+	return parsed.Data.User.ID, nil
 }
 
 type VerifyUserResp struct {
@@ -67,7 +67,7 @@ type Data struct {
 }
 
 type User struct {
-	ID        string `json:"id"`
+	ID        int    `json:"id"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Username  string `json:"username"`

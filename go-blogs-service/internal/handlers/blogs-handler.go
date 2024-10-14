@@ -8,8 +8,8 @@ import (
 )
 
 type Blogs struct {
-	ID        string `json:"id"`
-	UserID    string `json:"userID"`
+	ID        int    `json:"id"`
+	UserID    int    `json:"userID"`
 	Title     string `json:"title"`
 	Subtitle  string `json:"subtitle"`
 	Content   string `json:"content"`
@@ -68,7 +68,8 @@ func CreateNewBlogpostHandler(c echo.Context) error {
 	// grab the user
 	token := c.Get("user").(*jwt.Token)
 	claims := token.Claims.(*JwtCustomClaims)
-	if _, err := claims.Validate(hctx, token); err != nil {
+	userID, err := claims.Validate(hctx, token)
+	if err != nil {
 		return ErrorApiResponse(c, http.StatusUnauthorized, err)
 	}
 
@@ -78,7 +79,7 @@ func CreateNewBlogpostHandler(c echo.Context) error {
 		return ErrorApiResponse(c, http.StatusBadRequest, err)
 	}
 
-	_, err := hctx.GetCore().QueryStmts.CreateNewBlogpost.Exec(1, newBlog.Title, newBlog.Subtitle, newBlog.Content)
+	_, err = hctx.GetCore().QueryStmts.CreateNewBlogpost.Exec(userID, newBlog.Title, newBlog.Subtitle, newBlog.Content)
 	if err != nil {
 		return ErrorApiResponse(c, http.StatusInternalServerError, err)
 	}
