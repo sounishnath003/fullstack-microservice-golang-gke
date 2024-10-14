@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { HomeRoutingModule } from './home-routing.module';
+import { provideHttpClient } from '@angular/common/http';
 
 
 @NgModule({
@@ -9,6 +10,7 @@ import { HomeRoutingModule } from './home-routing.module';
   imports: [
     CommonModule,
     HomeRoutingModule
-  ]
+  ],
+  providers: [provideHttpClient()]
 })
 export class HomeModule { }

@@ -1,2 +1,26 @@
-<p>home works!</p>
-<router-outlet></router-outlet>
+<div class="max-w-6xl mx-auto mt-10 p-4 border rounded-lg">
+    <div *ngIf="onErrorMessage$ | async as errorMessage" role="alert"
+        class="rounded border-s-4 border-red-500 bg-red-50 p-4">
+        <strong class="block font-medium text-red-800"> Something went wrong </strong>
+        <p class="mt-2 text-sm text-red-700">
+            {{errorMessage}}
+        </p>
+    </div>
+    <div class="text-2xl text-blue-700"> &bull; Recommended Blogs</div>
+    <div class="my-5">
+        <div *ngIf="recommendedBlogs$|async as blogs" class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8">
+            <div *ngFor="let blog of blogs" class="h-auto rounded-lg border rounded-lg">
+                <div class="card m-2">
+                    <div class="card-title bg-gray-50 p-2 text-blue-700">{{blog.title}}</div>
+                    <div class="card-body p-2 bg-gray-100 rounded-b-lg">
+                        <div>
+                            <p class="text-sm tracking-wide"> {{blog.subtitle | titlecase}} </p>
+                            <p class="text-xs mt-2 text-right">{{blog.createdAt | date}} </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

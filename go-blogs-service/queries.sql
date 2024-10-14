@@ -5,7 +5,7 @@
 -- other: param
 SELECT ID, UserID, Title,SubTitle,
 Content,CreatedAt,UpdatedAt 
-FROM blogs ORDER BY CreatedAt DESC LIMIT 10;
+FROM blogs ORDER BY CreatedAt DESC LIMIT 9;
 
 -- name: createNewBlogpost
 -- some: param
