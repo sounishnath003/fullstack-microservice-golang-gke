@@ -168,15 +168,17 @@ func GetUserInfoByUsername(hctx *HandlerContext, username string) (User, error) 
 	}
 
 	// Throws error if the statuscode != 200 (OK)
-	if resp.StatusCode != http.StatusOK {
-		return User{}, errors.New("Unauthorized or Bad request")
+	if resp.StatusCode == http.StatusBadRequest {
+		return User{}, errors.New("Invalid username")
 	}
-
+	
 	var userInfo VerifyUserResp
 	json.NewDecoder(resp.Body).Decode(&userInfo)
 	if userInfo.Data.User.ID == 0 {
 		return User{}, errors.New("Unauthorized")
 	}
+
+	hctx.GetCore().Lo.Info("userinfo", "userinfo.resp", userInfo)
 
 	return userInfo.Data.User, nil
 }

@@ -50,7 +50,7 @@ func GetUserByUsername(c echo.Context) error {
 	err := hctx.GetCore().QueryStmts.GetUserByUsername.QueryRow(username).Scan(&user.ID, &user.FirstName, &user.LastName, &user.Username, &user.Email, &user.Password)
 	// Throws err.
 	if err != nil {
-		return ErrorApiResponse(c, http.StatusUnauthorized, errors.New("Unauthorized"))
+		return ErrorApiResponse(c, http.StatusBadRequest, errors.New("Username or blogs found."))
 	}
 
 	return c.JSON(http.StatusOK, NewApiResponse(http.StatusOK, echo.Map{
