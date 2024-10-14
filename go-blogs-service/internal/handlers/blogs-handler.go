@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -20,10 +19,6 @@ type Blogs struct {
 
 func BlogsRecommendationHandler(c echo.Context) error {
 	token := c.Get("user").(*jwt.Token)
-	// If token is not valid.
-	if !token.Valid {
-		return ErrorApiResponse(c, http.StatusBadRequest, errors.New("invalid token"))
-	}
 	// Claims the token.
 	claims := token.Claims.(*JwtCustomClaims)
 	hctx := c.(*HandlerContext)

@@ -132,9 +132,21 @@ func VerifyJwtTokenHandler(c echo.Context) error {
 	if len(jwtToken) < 30 {
 		return ErrorApiResponse(c, http.StatusUnauthorized, errors.New("Unauthorized"))
 	}
+
+	var verifyUser VerifyUserDto
+	if err := c.Bind(&verifyUser); err != nil {
+		return ErrorApiResponse(c, http.StatusBadRequest, err)
+	}
+
+	var user User
+	hctx := c.(*HandlerContext)
+
+	hctx.GetCore().QueryStmts.GetUserByUsername.QueryRow(verifyUser.Username).Scan(&user.ID, &user.FirstName, &user.LastName, &user.Username, &user.Email, &user.Password)
+
 	// TODO: Proper JWT Verification and User existence checks for context security
 	return c.JSON(http.StatusAccepted, NewApiResponse(http.StatusAccepted, echo.Map{
 		"valid": true,
+		"user":  user,
 	}, nil))
 }
 

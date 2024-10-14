@@ -15,3 +15,8 @@ type LoginUserDto struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
+
+type VerifyUserDto struct {
+	Email    string `json:"email"`
+	Username string `json:"username"`
+}

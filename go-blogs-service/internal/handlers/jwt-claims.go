@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -16,18 +18,58 @@ type JwtCustomClaims struct {
 }
 
 // Validate the JWT token with the auth-service.
+//
+// Returns (bool, error)
 func (jc *JwtCustomClaims) Validate(hctx *HandlerContext, token *jwt.Token) (bool, error) {
+	// If token is not valid.
+	if !token.Valid {
+		return false, errors.New("invalid token")
+	}
+	// Creating the dynamic auth endpoint url for the user verification.
 	authUrl := fmt.Sprintf("%s/api/auth/verify/%s", hctx.GetCore().AuthServiceEndpoint, token.Raw)
-
-	resp, err := http.Post(authUrl, "application/json", nil)
-
+	// Payload for Request body.
+	payload := map[string]any{
+		"email":    jc.Email,
+		"username": jc.Username,
+	}
+	payloadBytes, err := json.Marshal(payload)
 	if err != nil {
 		return false, err
 	}
-
+	// Grab the resp.
+	resp, err := http.Post(authUrl, "application/json", bytes.NewReader(payloadBytes))
+	// Throws err.
+	if err != nil {
+		return false, err
+	}
+	// Check for the 202 response only.
 	if resp.StatusCode != http.StatusAccepted {
 		return false, errors.New(fmt.Sprintf("%d - %s", resp.StatusCode, "Unauthorized"))
 	}
 
+	// Parse the resp.Body into struct.
+	var parsed VerifyUserResp
+	json.NewDecoder(resp.Body).Decode(&parsed)
+	// Log the output.
+	hctx.GetCore().Lo.Info("user.verification", "parsed", parsed, "userid", parsed.Data.User.ID, "resp.statuscode", resp.StatusCode)
+	// Return true or false.
 	return true, nil
+}
+
+type VerifyUserResp struct {
+	Data       Data  `json:"data"`
+	StatusCode int64 `json:"statusCode"`
+}
+
+type Data struct {
+	User  User `json:"user"`
+	Valid bool `json:"valid"`
+}
+
+type User struct {
+	ID        string `json:"id"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Username  string `json:"username"`
+	Email     string `json:"email"`
 }
