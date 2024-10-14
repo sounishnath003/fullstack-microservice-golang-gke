@@ -1,6 +1,6 @@
 package handlers
 
-import "github.com/labstack/echo"
+import "github.com/labstack/echo/v4"
 
 // ApiResponse struct to handle response data.
 type ApiResponse struct {

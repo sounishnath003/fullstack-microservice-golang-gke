@@ -9,9 +9,9 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// GetUser helps to get the user bare minimum information.
+// GetUserByID helps to get the user bare minimum information.
 // ID is the path param /api/users/:ID parameters captured.
-func GetUser(c echo.Context) error {
+func GetUserByID(c echo.Context) error {
 	// Get the core
 	IDs := c.Param("ID")
 	if len(IDs) == 0 {
@@ -28,10 +28,36 @@ func GetUser(c echo.Context) error {
 
 	hctx.GetCore().QueryStmts.GetUserByID.QueryRow(uid).Scan(&user.ID, &user.FirstName, &user.LastName, &user.Username, &user.Email, &user.Password)
 
-	return c.JSON(http.StatusOK, NewApiResponse(http.StatusOK, map[string]any{
+	return c.JSON(http.StatusOK, NewApiResponse(http.StatusOK, echo.Map{
 		"user": user,
 		"uid":  uid,
 	}, nil))
+}
+
+// GetUserByUsername helps to get the user information by the username
+func GetUserByUsername(c echo.Context) error {
+	// Get username from path param.
+	username := c.Param("Username")
+	// Check for real username.
+	if len(username) < 4 {
+		return ErrorApiResponse(c, http.StatusBadRequest, errors.New("bad request, required username"))
+	}
+	// Save user info.
+	var user User
+	// Accuquire the context.
+	hctx := c.(*HandlerContext)
+
+	err := hctx.GetCore().QueryStmts.GetUserByUsername.QueryRow(username).Scan(&user.ID, &user.FirstName, &user.LastName, &user.Username, &user.Email, &user.Password)
+	// Throws err.
+	if err == nil {
+		return ErrorApiResponse(c, http.StatusUnauthorized, errors.New("Unauthorized"))
+	}
+
+	return c.JSON(http.StatusOK, NewApiResponse(http.StatusOK, echo.Map{
+		"username": username,
+		"user":     user,
+	}, nil))
+
 }
 
 // LoginHandler helps to create the authentication and authorization of a user.
@@ -99,6 +125,19 @@ func SignupHandler(c echo.Context) error {
 		nil))
 }
 
+// Helps to verify the JWT token and User existence else throws err.
+// Reads the JWT token from the Param
+func VerifyJwtTokenHandler(c echo.Context) error {
+	jwtToken := c.Param("JwtToken")
+	if len(jwtToken) < 30 {
+		return ErrorApiResponse(c, http.StatusUnauthorized, errors.New("Unauthorized"))
+	}
+	// TODO: Proper JWT Verification and User existence checks for context security
+	return c.JSON(http.StatusAccepted, NewApiResponse(http.StatusAccepted, echo.Map{
+		"valid": true,
+	}, nil))
+}
+
 type User struct {
 	ID        string `json:"id"`
 	FirstName string `json:"firstName"`
@@ -106,8 +145,4 @@ type User struct {
 	Username  string `json:"username"`
 	Email     string `json:"email"`
 	Password  string `json:"-"`
-}
-
-func ErrorApiResponse(c echo.Context, status int, err error) error {
-	return c.JSON(status, NewApiResponse(status, nil, err))
 }

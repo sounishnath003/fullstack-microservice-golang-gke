@@ -3,10 +3,13 @@ package server
 import (
 	"fmt"
 
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
-	"github.com/sounishnath003/go-auth-service/internal/core"
-	"github.com/sounishnath003/go-auth-service/internal/handlers"
+	"github.com/golang-jwt/jwt/v5"
+	echojwt "github.com/labstack/echo-jwt/v4"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+
+	"github.com/sounishnath003/go-blogs-service/internal/core"
+	"github.com/sounishnath003/go-blogs-service/internal/handlers"
 )
 
 type Server struct {
@@ -20,13 +23,14 @@ func NewServer(co *core.Core) *Server {
 }
 
 func (s *Server) Start() error {
-	e := echo.New()
+	e := echo.New() // Use echo/v4 instead of echo
 
 	// Declare the custom context in the route handler
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			cc := &handlers.HandlerContext{
-				Context: c, Co: s.co,
+				Context: c,
+				Co:      s.co,
 			}
 			return next(cc)
 		}
@@ -45,12 +49,18 @@ func (s *Server) Start() error {
 	e.GET("/", handlers.BasicHandler)
 	e.GET("ping", handlers.PingHandler)
 
+	// Configure middleware with the custom claims type
+	config := echojwt.Config{
+		NewClaimsFunc: func(c echo.Context) jwt.Claims {
+			return new(handlers.JwtCustomClaims)
+		},
+		SigningKey: []byte(s.co.JWTSecret),
+	}
 	// Group all handler with /api
 	api := e.Group("/api")
-	api.GET("/auth/users/:Username", handlers.GetUserByUsername)
-	api.POST("/auth/login", handlers.LoginHandler)
-	api.POST("/auth/signup", handlers.SignupHandler)
-	api.POST("/auth/verify/:JwtToken", handlers.VerifyJwtTokenHandler)
+	api.Use(echojwt.WithConfig(config))
+	api.GET("/blogs/recommendations", handlers.BlogsRecommendationHandler)
+	api.POST("/blogs/create", handlers.CreateNewBlogpostHandler)
 
 	e.Logger.Info("server has been started and running on", "port", s.co.PORT)
 	return e.Start(fmt.Sprintf(":%d", s.co.PORT))
