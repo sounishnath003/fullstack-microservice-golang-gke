@@ -49,7 +49,7 @@ func GetUserByUsername(c echo.Context) error {
 
 	err := hctx.GetCore().QueryStmts.GetUserByUsername.QueryRow(username).Scan(&user.ID, &user.FirstName, &user.LastName, &user.Username, &user.Email, &user.Password)
 	// Throws err.
-	if err == nil {
+	if err != nil {
 		return ErrorApiResponse(c, http.StatusUnauthorized, errors.New("Unauthorized"))
 	}
 

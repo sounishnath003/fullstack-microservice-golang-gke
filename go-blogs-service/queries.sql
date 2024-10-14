@@ -13,3 +13,6 @@ FROM blogs ORDER BY CreatedAt DESC LIMIT 10;
 INSERT INTO blogs (UserID, Title, SubTitle, Content)
 VALUES ($1,$2,$3,$4);
 
+-- name: getBlogsByUsername
+SELECT ID, UserID, Title, SubTitle, Content, CreatedAt, UpdatedAt
+FROM blogs WHERE UserID=$1;
