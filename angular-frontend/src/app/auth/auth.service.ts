@@ -19,6 +19,11 @@ export class AuthService {
     )
   }
 
+  signup$(signupFormDto: SignupFormDto): Observable<{ data: string, statusCode: number }> {
+    return this.httpClient.post<{ data: string, statusCode: number }>(`${this.AUTH_SERVICE_ENDPOINT}/api/auth/signup`, signupFormDto)
+  }
+
+
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
       // A client-side or network error occurred. Handle it accordingly.
@@ -35,6 +40,14 @@ export class AuthService {
 }
 
 
+export type SignupFormDto = {
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  password: string;
+  acceptedTnC: boolean;
+}
 
 export type LoginFormDto = {
   username: string;
