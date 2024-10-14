@@ -1,3 +1,10 @@
+<div class="h-2 bg-blue-700"></div>
 
-<h1>Hello, {{ title }}</h1>
-<p>Congratulations! Your app is running. 🎉</p>
+<div>
+    <router-outlet></router-outlet>
+</div>
+
+<div class="p-2 bg-blue-50 text-center flex flex-row space-4 justify-around items-center fixed bottom-0 w-full">
+    <h1 class="text-gray-800"> {{title}} </h1>
+    <p><b>Note:</b> Congratulations! Your app is running. 🎉</p>
+</div>
