@@ -26,7 +26,7 @@ func NewCore() *Core {
 	// Define the logger.
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
-	dsn := utils.GetEnv("DSN", "postgres://root:password@127.0.0.1:5432/auth?sslmode=disable").(string)
+	dsn := utils.GetEnv("AUTH_SERVICE_DSN", "postgres://root:password@127.0.0.1:5432/auth?sslmode=disable").(string)
 	driver := utils.GetEnv("DRIVER", "postgres").(string)
 
 	// Check the db open.
@@ -55,9 +55,9 @@ func NewCore() *Core {
 
 	// Return the core.
 	return &Core{
-		PORT:       utils.GetEnv("PORT", 3000).(int),
+		PORT:       utils.GetEnv("AUTH_SERVICE_PORT", 3000).(int),
 		DSN:        dsn,
-		JWTSecret:  utils.GetEnv("JWT_SECRET", "my5u43Rs3CR3T0k3N$!(1).*").(string),
+		JWTSecret:  utils.GetEnv("AUTH_SERVICE_JWT_SECRET", "my5u43Rs3CR3T0k3N$!(1).*").(string),
 		QueryStmts: &queryStmts,
 		Lo:         logger,
 	}

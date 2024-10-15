@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
+import { BLOGS_SERVICE_ENDPOINT } from '../environments';
 
 @Injectable({
   providedIn: 'root'
@@ -9,12 +10,11 @@ export class BlogsService {
   private readonly JwtToken = window.localStorage.getItem("JWT_TOKEN");
   private readonly Username = window.localStorage.getItem("Username");
 
-  private BLOGS_SERVICE_ENDPOINT = `http://127.0.0.1:3001`;
 
   constructor(private httpClient: HttpClient) { }
 
   getRecommendedBlogs$() {
-    return this.httpClient.get<BlogsRecommendation>(`${this.BLOGS_SERVICE_ENDPOINT}/api/blogs/recommendations`, {
+    return this.httpClient.get<BlogsRecommendation>(`${BLOGS_SERVICE_ENDPOINT}/api/blogs/recommendations`, {
       headers: {
         'Content-Type': 'application/json, charset=UTF-8',
         'Accept': 'application/json, charset=UTF-8',
@@ -26,7 +26,7 @@ export class BlogsService {
   }
 
   getBlogDetailsByID$(blogID: string) {
-    return this.httpClient.get<GetBlog>(`${this.BLOGS_SERVICE_ENDPOINT}/api/blogs/${blogID}`, {
+    return this.httpClient.get<GetBlog>(`${BLOGS_SERVICE_ENDPOINT}/api/blogs/${blogID}`, {
       headers: {
         'Content-Type': 'application/json, charset=UTF-8',
         'Accept': 'application/json, charset=UTF-8',
@@ -36,7 +36,7 @@ export class BlogsService {
   }
 
   getBlogsByUserID$(userID: number) {
-    return this.httpClient.get<BlogsRecommendation>(`${this.BLOGS_SERVICE_ENDPOINT}/api/blogs/users/${userID}`, {
+    return this.httpClient.get<BlogsRecommendation>(`${BLOGS_SERVICE_ENDPOINT}/api/blogs/users/${userID}`, {
       headers: {
         'Content-Type': 'application/json, charset=UTF-8',
         'Accept': 'application/json, charset=UTF-8',
@@ -49,7 +49,7 @@ export class BlogsService {
   }
 
   createBlogpost$(blog: CreateNewBlogDto) {
-    return this.httpClient.post<{ data: { message: string }, statusCode: number }>(`${this.BLOGS_SERVICE_ENDPOINT}/api/blogs/create`, {
+    return this.httpClient.post<{ data: { message: string }, statusCode: number }>(`${BLOGS_SERVICE_ENDPOINT}/api/blogs/create`, {
       title: blog.title,
       subtitle: blog.subtitle,
       content: blog.content

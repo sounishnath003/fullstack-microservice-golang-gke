@@ -1,17 +1,17 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, tap, throwError } from 'rxjs';
+import { AUTH_SERVICE_ENDPOINT } from '../environments';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private AUTH_SERVICE_ENDPOINT = `http://127.0.0.1:3000`
 
   constructor(private httpClient: HttpClient) { }
 
   login$(loginDetails: LoginFormDto): Observable<LoginSuccessful> {
-    return this.httpClient.post<LoginSuccessful>(`${this.AUTH_SERVICE_ENDPOINT}/api/auth/login`, { username: loginDetails.username, password: loginDetails.password }).pipe(
+    return this.httpClient.post<LoginSuccessful>(`${AUTH_SERVICE_ENDPOINT}/api/auth/login`, { username: loginDetails.username, password: loginDetails.password }).pipe(
       tap(res => {
         window.localStorage.setItem('JWT_TOKEN', res.data.token);
         window.localStorage.setItem('USERNAME', res.data.username);
@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   signup$(signupFormDto: SignupFormDto): Observable<{ data: string, statusCode: number }> {
-    return this.httpClient.post<{ data: string, statusCode: number }>(`${this.AUTH_SERVICE_ENDPOINT}/api/auth/signup`, signupFormDto)
+    return this.httpClient.post<{ data: string, statusCode: number }>(`${AUTH_SERVICE_ENDPOINT}/api/auth/signup`, signupFormDto)
   }
 
   isLoggedIn(): boolean {
