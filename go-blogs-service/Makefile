@@ -1,5 +1,5 @@
 AppName=blogsservice-$(shell date +"%Y%m%d")
-DockerImageName=asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/goblogsservice:v$(shell date +'%y%m%H%.M%S')
+DockerImageName=asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/goblogsservice:v$(shell date +'%y%m%H.%M%S')
 
 .PHONY: install
 install:

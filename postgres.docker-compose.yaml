@@ -30,7 +30,7 @@ services:
       - 8080:80
 
   goauthservice:
-    image: asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/goauthservice:v241015.1123
+    image: asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/goauthservice:v241017.5438
     restart: always
     environment:
       AUTH_SERVICE_PORT: 3000
@@ -40,6 +40,21 @@ services:
       - 3000
     ports:
       - 3000:3000
+    depends_on:
+          postgres:
+            condition: service_healthy
+
+  goblogsservice:
+    image: asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/goblogsservice:v241017.M12
+    restart: always
+    environment:
+      BLOGS_SERVICE_PORT: 3001
+      BLOGS_SERVICE_DSN: "postgres://root:password@postgres:5432/blogs?sslmode=disable"
+      AUTH_SERVICE_JWT_SECRET: 5u43r5Ec2Et%455W0r4!as&(!Q)
+    expose:
+      - 3001
+    ports:
+      - 3001:3001
     depends_on:
           postgres:
             condition: service_healthy

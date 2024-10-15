@@ -13,6 +13,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o /app/bin/goblogsservic
 FROM scratch
 WORKDIR /app
 
+COPY queries.sql .
 COPY --from=builder /app/bin/goblogsservice .
 
 EXPOSE 3001
