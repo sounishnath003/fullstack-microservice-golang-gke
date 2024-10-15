@@ -1,13 +1,4 @@
 <section class="mt-3 max-w-full">
-    <div *ngIf="onErrorMessage$ | async as errorMessage" role="alert"
-        class="rounded border-s-4 border-red-500 bg-red-50 p-4">
-        <strong class="block font-medium text-red-800"> Something went wrong </strong>
-
-        <p class="mt-2 text-sm text-red-700">
-            {{errorMessage}}
-        </p>
-    </div>
-
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6 items-center justify-around mt-3">
         <div class="flex flex-row items-center justify-between gap-4 w-full">
             <label for="Username" class="block text-sm font-medium text-gray-700"> Username:
@@ -36,5 +27,13 @@
         <p class="text-red-600 text-sm" *ngIf="!loginForm.valid">**Note: Form is not valid**</p>
 
     </form>
-
 </section>
+
+<div *ngIf="onErrorMessage$ | async as errorMessage" role="alert"
+    class="rounded border-s-4 border-red-500 bg-red-50 p-4 mt-5 max-w-full">
+    <strong class="block font-medium text-red-800"> Something went wrong </strong>
+
+    <p class="mt-2 text-sm text-red-700">
+        {{errorMessage}}
+    </p>
+</div>
