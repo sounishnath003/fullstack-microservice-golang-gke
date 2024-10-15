@@ -1,4 +1,5 @@
 AppName=blogsservice-$(shell date +"%Y%m%d")
+DockerImageName=asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/goblogsservice:v$(shell date +'%y%m%H%.M%S')
 
 .PHONY: install
 install:
@@ -15,3 +16,9 @@ build:
 run: build
 	export DSN="postgres://root:password@127.0.0.1:5432/auth?sslmode=disable"
 	./bin/$(AppName)
+
+
+.PHONY: docker-build-push
+docker-build-push:
+	docker build -t $(DockerImageName) -f Dockerfile .
+	docker images

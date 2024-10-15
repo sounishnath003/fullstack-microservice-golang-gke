@@ -1,1 +1,20 @@
-FROM golang:1.23.1-slim AS builder
+FROM golang:1.23 AS builder
+
+WORKDIR /app
+
+COPY . .
+RUN go mod tidy
+RUN go mod download -x
+RUN go mod verify
+
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o /app/bin/goauthservice main.go
+
+
+FROM scratch
+WORKDIR /app
+
+COPY --from=builder /app/bin/goauthservice .
+
+EXPOSE 3000
+
+CMD ["/app/goauthservice"]
