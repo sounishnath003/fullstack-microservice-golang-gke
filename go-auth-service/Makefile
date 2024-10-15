@@ -1,5 +1,5 @@
 AppName=authservice-$(shell date +"%Y%m%d")
-DockerImageName=asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/goauthservice:v$(shell date +'%y%m%H.%M%S')
+DockerImageName=asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/go-auth-service:v$(shell date +'%y%m%H.%M%S')
 
 .PHONY: install
 install:

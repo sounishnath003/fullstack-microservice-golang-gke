@@ -17,6 +17,5 @@ COPY queries.sql .
 COPY --from=builder /app/bin/goblogsservice .
 
 EXPOSE 3001
-EXPOSE 5432
 
 CMD ["/app/goblogsservice"]

@@ -1,3 +1,6 @@
+// Read here: https://dev.to/dimeloper/managing-environment-variables-in-angular-apps-14gn
 
-export const AUTH_SERVICE_ENDPOINT = `http://127.0.0.1:3000`;
-export const BLOGS_SERVICE_ENDPOINT = `http://127.0.0.1:3001`;
+console.log({ AUTH_SERVICE_ENDPOINT: import.meta.env });
+
+export const NG_APP_AUTH_SERVICE_ENDPOINT = import.meta.env.NG_APP_AUTH_SERVICE_ENDPOINT;
+export const NG_APP_BLOGS_SERVICE_ENDPOINT = import.meta.env.NG_APP_BLOGS_SERVICE_ENDPOINT;
