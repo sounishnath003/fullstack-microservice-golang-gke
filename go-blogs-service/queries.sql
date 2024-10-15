@@ -15,7 +15,7 @@ VALUES ($1,$2,$3,$4);
 
 -- name: getBlogsByUserID
 SELECT ID, UserID, Title, SubTitle, Content, CreatedAt, UpdatedAt
-FROM blogs WHERE UserID=$1;
+FROM blogs WHERE UserID=$1 ORDER BY CreatedAt DESC LIMIT 3;
 
 -- name: getBlogsByBlogID
 SELECT ID, UserID, Title, SubTitle, Content, CreatedAt, UpdatedAt

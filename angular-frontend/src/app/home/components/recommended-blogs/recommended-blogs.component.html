@@ -8,19 +8,32 @@
 </div>
 
 <div class="my-5">
-    <div *ngIf="recommendedBlogs$|async as blogs" class="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-8">
-        <div *ngFor="let blog of blogs" class="h-auto">
+
+
+    <div *ngIf="recommendedBlogs$|async as blogs" class="my-3 grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8">
+        <article *ngFor="let blog of blogs" class="overflow-hidden rounded-lg shadow transition hover:shadow-lg">
             <a (click)="onClickGoToBlogView(blog)">
-                <div class="card rounded-lg">
-                    <div class="card-title bg-blue-50 p-2 text-blue-700">{{blog.title}}</div>
-                    <div class="card-body p-2 bg-gray-100 rounded-b-lg">
-                        <div>
-                            <p class="text-sm tracking-wide"> {{blog.subtitle | titlecase}} </p>
-                            <p class="text-xs mt-2 text-right">{{blog.createdAt | date}} </p>
-                        </div>
-                    </div>
+                <img alt=""
+                    src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
+                    class="h-56 w-full object-cover" />
+
+                <div class="bg-white p-4 sm:p-6">
+                    <time datetime="2022-10-10" class="block text-xs text-gray-500"> {{blog.createdAt | date}}
+                    </time>
+
+                    <a href="#">
+                        <h3 class="mt-0.5 text-lg text-gray-900"> {{blog.title}} </h3>
+                    </a>
+
+                    <p class="mt-2 line-clamp-3 text-sm/relaxed text-gray-500">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae dolores, possimus
+                        pariatur animi temporibus nesciunt praesentium dolore sed nulla ipsum eveniet corporis
+                        quidem,
+                        mollitia itaque minus soluta, voluptates neque explicabo tempora nisi culpa eius atque
+                        dignissimos. Molestias explicabo corporis voluptatem?
+                    </p>
                 </div>
             </a>
-        </div>
+        </article>
     </div>
 </div>

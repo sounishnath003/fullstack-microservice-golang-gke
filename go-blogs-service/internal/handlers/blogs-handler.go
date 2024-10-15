@@ -157,6 +157,11 @@ func GetBlogsByUserIDHandler(c echo.Context) error {
 		return ErrorApiResponse(c, http.StatusBadRequest, errors.New("Username not found"))
 	}
 
+	user, err := GetUserInfoByUsername(hctx, "manisha011")
+	if err != nil {
+		return ErrorApiResponse(c, http.StatusBadRequest, errors.New("Username not found"))
+	}
+
 	resultRows, err := hctx.GetCore().QueryStmts.GetBlogsByUserID.Query(userID)
 	if err != nil {
 		return ErrorApiResponse(c, http.StatusBadRequest, err)
@@ -188,8 +193,8 @@ func GetBlogsByUserIDHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, NewApiResponse(
 		http.StatusOK,
 		echo.Map{
-			"blogs":  blogs,
-			"userID": userID,
+			"blogs":    blogs,
+			"username": user.Username,
 		},
 		nil,
 	))

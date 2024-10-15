@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Blog, BlogsService } from '../../blogs.service';
 import { BehaviorSubject, map, switchMap } from 'rxjs';
-import { AsyncPipe, DatePipe, JsonPipe, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe, JsonPipe, NgForOf, NgIf } from '@angular/common';
 import { AuthService } from '../../../auth/auth.service';
 
 @Component({
   selector: 'app-blogs-view',
   standalone: true,
-  imports: [AsyncPipe, NgIf, JsonPipe, DatePipe],
+  imports: [AsyncPipe, NgIf, JsonPipe, DatePipe, NgForOf],
   providers: [BlogsService, AuthService],
   templateUrl: './blogs-view.component.html',
   styleUrl: './blogs-view.component.css'
@@ -19,7 +19,7 @@ export class BlogsViewComponent {
 
   onErrorMessage$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-  constructor(private readonly route: ActivatedRoute, private readonly blogsService: BlogsService, private readonly authService: AuthService) {
+  constructor(private readonly route: ActivatedRoute, private readonly router: Router, private readonly blogsService: BlogsService, private readonly authService: AuthService) {
     this.getBlogDetails();
   }
 
@@ -50,5 +50,12 @@ export class BlogsViewComponent {
         this.onErrorMessage$.next(JSON.stringify(err.error));
       }
     )
+  }
+
+  onClickGoToBlogView(blog: Blog) {
+    this.router.navigate(['home', 'blogs', blog.id, blog.title], {
+      preserveFragment: true,
+      state: blog
+    })
   }
 }

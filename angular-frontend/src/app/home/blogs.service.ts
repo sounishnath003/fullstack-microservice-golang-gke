@@ -44,7 +44,7 @@ export class BlogsService {
       }
     }
     ).pipe(
-      map(resp => resp.data)
+      map((resp: any) => resp.data.blogs)
     )
   }
 }
