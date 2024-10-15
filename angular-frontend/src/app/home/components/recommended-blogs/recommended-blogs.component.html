@@ -1,4 +1,13 @@
-<div class="text-2xl text-blue-700"> &bull; Recommended Blogs</div>
+<div class="flex flex row justify-around items-center">
+    <div class="text-2xl text-blue-700"> &bull; Recommended Blogs</div>
+    <div class="flex-1"></div>
+    <div class="text-right">
+        <button routerLink="/home/blogs/create"
+            class="p-2 bg-blue-600 hover:bg-blue-500 tracking-wide text-sm rounded-lg text-white hover:text-black">
+            ✍️ Write a Blogpost</button>
+    </div>
+
+</div>
 <div *ngIf="onErrorMessage$ | async as errorMessage" role="alert"
     class="rounded border-s-4 border-red-500 bg-red-50 p-4">
     <strong class="block font-medium text-red-800"> Something went wrong </strong>
@@ -8,8 +17,6 @@
 </div>
 
 <div class="my-5">
-
-
     <div *ngIf="recommendedBlogs$|async as blogs" class="my-3 grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8">
         <article *ngFor="let blog of blogs" class="overflow-hidden rounded-lg shadow transition hover:shadow-lg">
             <a (click)="onClickGoToBlogView(blog)">

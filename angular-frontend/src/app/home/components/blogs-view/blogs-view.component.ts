@@ -2,14 +2,15 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Blog, BlogsService } from '../../blogs.service';
 import { BehaviorSubject, map, switchMap } from 'rxjs';
-import { AsyncPipe, DatePipe, JsonPipe, NgForOf, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe, JsonPipe, NgForOf, NgIf, TitleCasePipe } from '@angular/common';
 import { AuthService } from '../../../auth/auth.service';
+import { MarkdownService } from 'ngx-markdown';
 
 @Component({
   selector: 'app-blogs-view',
   standalone: true,
-  imports: [AsyncPipe, NgIf, JsonPipe, DatePipe, NgForOf],
-  providers: [BlogsService, AuthService],
+  imports: [AsyncPipe, NgIf, JsonPipe, DatePipe, NgForOf, TitleCasePipe,],
+  providers: [BlogsService, AuthService, MarkdownService],
   templateUrl: './blogs-view.component.html',
   styleUrl: './blogs-view.component.css'
 })
@@ -19,7 +20,7 @@ export class BlogsViewComponent {
 
   onErrorMessage$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-  constructor(private readonly route: ActivatedRoute, private readonly router: Router, private readonly blogsService: BlogsService, private readonly authService: AuthService) {
+  constructor(private readonly route: ActivatedRoute, private readonly router: Router, private readonly blogsService: BlogsService, private readonly authService: AuthService, private readonly markdownService: MarkdownService) {
     this.getBlogDetails();
   }
 
@@ -57,5 +58,9 @@ export class BlogsViewComponent {
       preserveFragment: true,
       state: blog
     })
+  }
+
+  parseMarkdown(content: string) {
+    return this.markdownService.parse(content);;
   }
 }
