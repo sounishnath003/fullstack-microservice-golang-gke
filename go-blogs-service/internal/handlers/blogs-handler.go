@@ -138,7 +138,7 @@ func GetBlogByBlogIDHandler(c echo.Context) error {
 	))
 }
 
-func GetBlogsByUsernameHandler(c echo.Context) error {
+func GetBlogsByUserIDHandler(c echo.Context) error {
 	// Accuquire context.
 	hctx := c.(*HandlerContext)
 	// Grab the user
@@ -150,18 +150,14 @@ func GetBlogsByUsernameHandler(c echo.Context) error {
 		return ErrorApiResponse(c, http.StatusUnauthorized, err)
 	}
 
-	// Get the username.
-	username := c.Param("Username")
+	// Get the userID.
+	userID := c.Param("UserID")
 	// Throws err
-	if len(username) == 0 {
+	if len(userID) == 0 {
 		return ErrorApiResponse(c, http.StatusBadRequest, errors.New("Username not found"))
 	}
-	user, err := GetUserInfoByUsername(hctx, username)
-	if err != nil {
-		return ErrorApiResponse(c, http.StatusBadRequest, err)
-	}
 
-	resultRows, err := hctx.GetCore().QueryStmts.GetBlogsByUsername.Query(user.ID)
+	resultRows, err := hctx.GetCore().QueryStmts.GetBlogsByUserID.Query(userID)
 	if err != nil {
 		return ErrorApiResponse(c, http.StatusBadRequest, err)
 	}
@@ -192,9 +188,8 @@ func GetBlogsByUsernameHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, NewApiResponse(
 		http.StatusOK,
 		echo.Map{
-			"username": username,
-			"userID":   user.ID,
-			"blogs":    blogs,
+			"blogs":  blogs,
+			"userID": userID,
 		},
 		nil,
 	))

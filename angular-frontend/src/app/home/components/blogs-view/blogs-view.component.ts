@@ -15,6 +15,8 @@ import { AuthService } from '../../../auth/auth.service';
 })
 export class BlogsViewComponent {
   blogDetails$: BehaviorSubject<Blog | null> = new BehaviorSubject<Blog | null>(null);
+  moreBlogsByUser$: BehaviorSubject<Blog[]> = new BehaviorSubject<Blog[]>([]);
+
   onErrorMessage$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor(private readonly route: ActivatedRoute, private readonly blogsService: BlogsService, private readonly authService: AuthService) {
@@ -28,6 +30,7 @@ export class BlogsViewComponent {
     ).subscribe(
       (res) => {
         this.blogDetails$.next(res);
+        this.getBlogsByUserID(res.userID);
       }, (err) => {
         console.log(err.error);
         this.onErrorMessage$.next(err.error.error);
@@ -35,6 +38,16 @@ export class BlogsViewComponent {
         } else {
           this.onErrorMessage$.next(err.error.message);
         }
+      }
+    )
+  }
+
+  getBlogsByUserID(userID: number) {
+    this.blogsService.getBlogsByUserID$(userID).subscribe(
+      (res) => {
+        this.moreBlogsByUser$.next(res);
+      }, (err) => {
+        this.onErrorMessage$.next(JSON.stringify(err.error));
       }
     )
   }

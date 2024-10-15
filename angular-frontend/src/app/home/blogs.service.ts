@@ -34,6 +34,19 @@ export class BlogsService {
       }
     }).pipe(map(resp => resp.data));
   }
+
+  getBlogsByUserID$(userID: number) {
+    return this.httpClient.get<BlogsRecommendation>(`${this.BLOGS_SERVICE_ENDPOINT}/api/blogs/users/${userID}`, {
+      headers: {
+        'Content-Type': 'application/json, charset=UTF-8',
+        'Accept': 'application/json, charset=UTF-8',
+        'Authorization': `Bearer ${this.JwtToken}`
+      }
+    }
+    ).pipe(
+      map(resp => resp.data)
+    )
+  }
 }
 
 
