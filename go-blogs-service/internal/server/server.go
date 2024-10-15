@@ -65,5 +65,5 @@ func (s *Server) Start() error {
 	api.GET("/blogs/users/:UserID", handlers.GetBlogsByUserIDHandler)
 
 	e.Logger.Info("server has been started and running on", "port", s.co.PORT)
-	return e.Start(fmt.Sprintf(":%d", s.co.PORT))
+	return e.Start(fmt.Sprintf(":%s", s.co.PORT))
 }

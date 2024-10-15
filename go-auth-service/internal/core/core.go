@@ -14,7 +14,7 @@ import (
 )
 
 type Core struct {
-	PORT       int
+	PORT       string
 	DSN        string
 	QueryStmts *AuthServiceQueries
 	Lo         *slog.Logger
@@ -55,7 +55,7 @@ func NewCore() *Core {
 
 	// Return the core.
 	return &Core{
-		PORT:       utils.GetEnv("AUTH_SERVICE_PORT", 3000).(int),
+		PORT:       utils.GetEnv("AUTH_SERVICE_PORT", "3000").(string),
 		DSN:        dsn,
 		JWTSecret:  utils.GetEnv("AUTH_SERVICE_JWT_SECRET", "my5u43Rs3CR3T0k3N$!(1).*").(string),
 		QueryStmts: &queryStmts,
