@@ -23,6 +23,19 @@ export class AuthService {
     return this.httpClient.post<{ data: string, statusCode: number }>(`${this.AUTH_SERVICE_ENDPOINT}/api/auth/signup`, signupFormDto)
   }
 
+  isLoggedIn(): boolean {
+    const getToken = window.localStorage.getItem('JWT_TOKEN');
+    if (getToken === null) return false;
+    console.log({ getToken });
+    return true;
+  }
+
+  logout() {
+    window.localStorage.removeItem('JWT_TOKEN');
+    window.localStorage.removeItem('USERNAME');
+    window.localStorage.clear();
+  }
+
 
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {

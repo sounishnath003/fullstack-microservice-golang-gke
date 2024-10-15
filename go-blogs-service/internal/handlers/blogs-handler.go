@@ -96,6 +96,48 @@ func CreateNewBlogpostHandler(c echo.Context) error {
 	))
 }
 
+func GetBlogByBlogIDHandler(c echo.Context) error {
+	// Accuquire context.
+	hctx := c.(*HandlerContext)
+	// Grab the user
+	token := c.Get("user").(*jwt.Token)
+	claims := token.Claims.(*JwtCustomClaims)
+
+	_, err := claims.Validate(hctx, token)
+	if err != nil {
+		return ErrorApiResponse(c, http.StatusUnauthorized, err)
+	}
+
+	blogID := c.Param("BlogID")
+	if len(blogID) == 0 {
+		return ErrorApiResponse(c, http.StatusBadRequest, errors.New("blog id not found"))
+	}
+
+	var blog Blog
+	err = hctx.GetCore().QueryStmts.GetBlogsByBlogID.QueryRow(blogID).Scan(
+		&blog.ID,
+		&blog.UserID,
+		&blog.Title,
+		&blog.Subtitle,
+		&blog.Content,
+		&blog.CreatedAt,
+		&blog.UpdatedAt)
+
+	if err != nil {
+		return ErrorApiResponse(c, http.StatusBadRequest, errors.New("something went wrong. BlogID not found"))
+	}
+
+	if blog.ID < 1 {
+		return ErrorApiResponse(c, http.StatusBadRequest, errors.New("blog details not found"))
+	}
+
+	return c.JSON(http.StatusOK, NewApiResponse(
+		http.StatusOK,
+		blog,
+		nil,
+	))
+}
+
 func GetBlogsByUsernameHandler(c echo.Context) error {
 	// Accuquire context.
 	hctx := c.(*HandlerContext)
@@ -171,7 +213,7 @@ func GetUserInfoByUsername(hctx *HandlerContext, username string) (User, error) 
 	if resp.StatusCode == http.StatusBadRequest {
 		return User{}, errors.New("Invalid username")
 	}
-	
+
 	var userInfo VerifyUserResp
 	json.NewDecoder(resp.Body).Decode(&userInfo)
 	if userInfo.Data.User.ID == 0 {

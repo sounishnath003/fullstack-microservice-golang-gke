@@ -1,0 +1,26 @@
+<div class="text-2xl text-blue-700"> &bull; Recommended Blogs</div>
+<div *ngIf="onErrorMessage$ | async as errorMessage" role="alert"
+    class="rounded border-s-4 border-red-500 bg-red-50 p-4">
+    <strong class="block font-medium text-red-800"> Something went wrong </strong>
+    <p class="mt-2 text-sm text-red-700">
+        {{errorMessage}}
+    </p>
+</div>
+
+<div class="my-5">
+    <div *ngIf="recommendedBlogs$|async as blogs" class="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-8">
+        <div *ngFor="let blog of blogs" class="h-auto">
+            <a (click)="onClickGoToBlogView(blog)">
+                <div class="card rounded-lg">
+                    <div class="card-title bg-blue-50 p-2 text-blue-700">{{blog.title}}</div>
+                    <div class="card-body p-2 bg-gray-100 rounded-b-lg">
+                        <div>
+                            <p class="text-sm tracking-wide"> {{blog.subtitle | titlecase}} </p>
+                            <p class="text-xs mt-2 text-right">{{blog.createdAt | date}} </p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

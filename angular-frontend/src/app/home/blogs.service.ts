@@ -14,7 +14,6 @@ export class BlogsService {
   constructor(private httpClient: HttpClient) { }
 
   getRecommendedBlogs$() {
-
     return this.httpClient.get<BlogsRecommendation>(`${this.BLOGS_SERVICE_ENDPOINT}/api/blogs/recommendations`, {
       headers: {
         'Content-Type': 'application/json, charset=UTF-8',
@@ -25,11 +24,26 @@ export class BlogsService {
       map(resp => resp.data)
     )
   }
+
+  getBlogDetailsByID$(blogID: string) {
+    return this.httpClient.get<GetBlog>(`${this.BLOGS_SERVICE_ENDPOINT}/api/blogs/${blogID}`, {
+      headers: {
+        'Content-Type': 'application/json, charset=UTF-8',
+        'Accept': 'application/json, charset=UTF-8',
+        'Authorization': `Bearer ${this.JwtToken}`
+      }
+    }).pipe(map(resp => resp.data));
+  }
 }
 
 
 export interface BlogsRecommendation {
   data: Blog[];
+  statusCode: number;
+}
+
+export interface GetBlog {
+  data: Blog;
   statusCode: number;
 }
 

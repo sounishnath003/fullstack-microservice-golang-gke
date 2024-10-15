@@ -16,3 +16,7 @@ VALUES ($1,$2,$3,$4);
 -- name: getBlogsByUsername
 SELECT ID, UserID, Title, SubTitle, Content, CreatedAt, UpdatedAt
 FROM blogs WHERE UserID=$1;
+
+-- name: getBlogsByBlogID
+SELECT ID, UserID, Title, SubTitle, Content, CreatedAt, UpdatedAt
+FROM blogs WHERE ID=$1;

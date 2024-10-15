@@ -1,37 +1,24 @@
 import { Component } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { Blog, BlogsService } from './blogs.service';
-import { AsyncPipe, DatePipe, JsonPipe, NgFor, NgForOf, NgIf, TitleCasePipe } from '@angular/common';
+import { BlogsService } from './blogs.service';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { AuthService } from '../auth/auth.service';
+import { RecommendedBlogsComponent } from './components/recommended-blogs/recommended-blogs.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterOutlet, JsonPipe, AsyncPipe, NgIf, NgForOf, DatePipe, TitleCasePipe],
-  providers: [BlogsService],
+  imports: [RouterOutlet, NgIf, AsyncPipe, RecommendedBlogsComponent],
+  providers: [BlogsService, AuthService],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
   onErrorMessage$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  recommendedBlogs$: BehaviorSubject<Blog[]> = new BehaviorSubject<Blog[]>([]);
-
-  constructor(private readonly blogsService: BlogsService, private readonly router: Router) {
-    this.getRecommendedBlogs();
-  }
-
-  getRecommendedBlogs() {
-    this.blogsService.getRecommendedBlogs$().subscribe(
-      (resp) => {
-        console.log(resp);
-
-        this.recommendedBlogs$.next(resp);
-      }, (err) => {
-        console.error(err);
-        window.localStorage.clear();
-        this.router.navigate(['/']);
-        this.onErrorMessage$.next(err.error.error);
-      }
-    )
+  constructor(private readonly router: Router, private readonly route: ActivatedRoute) {
+    this.router.navigate(['recommended-blogs'], {
+      relativeTo: this.route
+    })
   }
 }

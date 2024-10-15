@@ -6,21 +6,8 @@
             {{errorMessage}}
         </p>
     </div>
-    <div class="text-2xl text-blue-700"> &bull; Recommended Blogs</div>
-    <div class="my-5">
-        <div *ngIf="recommendedBlogs$|async as blogs" class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8">
-            <div *ngFor="let blog of blogs" class="h-auto rounded-lg border rounded-lg">
-                <div class="card m-2">
-                    <div class="card-title bg-gray-50 p-2 text-blue-700">{{blog.title}}</div>
-                    <div class="card-body p-2 bg-gray-100 rounded-b-lg">
-                        <div>
-                            <p class="text-sm tracking-wide"> {{blog.subtitle | titlecase}} </p>
-                            <p class="text-xs mt-2 text-right">{{blog.createdAt | date}} </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-        </div>
+    <div>
+        <router-outlet></router-outlet>
     </div>
 </div>

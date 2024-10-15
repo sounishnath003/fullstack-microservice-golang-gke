@@ -1,0 +1,20 @@
+<div>
+    <div *ngIf="onErrorMessage$|async as errorMessage" class="mx-auto text-center">
+        <p class="text-red-600"> Error: {{errorMessage}} </p>
+    </div>
+    <div class="m-3 p-2" *ngIf="blogDetails$ | async as blog">
+        <div class="my-2 text-2xl text-blue-700"> <a href="#" class="rounded-full p-2 bg-gray-50 w-12">&larr;</a> {{blog.title}} - {{blog.subtitle}} </div>
+        <div class="flex flex-row justify-start items-center gap-3">
+            <div class="text-sm text-gray-700"><b>posted on:</b> {{blog.createdAt | date}} </div>
+        </div>
+        <div class="text my-5 tracking-wide line-height-0 text-gray-700"> {{blog.content}} </div>
+    </div>
+    <div class="my-5">
+        <div class="flex flex-col gap-4 justify-start items-start">
+            <div>
+                <div class="text-2xl text-blue-800">&bull; More recommended blogs</div>
+            </div>
+        </div>
+
+    </div>
+</div>

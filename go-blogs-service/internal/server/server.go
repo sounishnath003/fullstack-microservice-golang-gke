@@ -61,7 +61,8 @@ func (s *Server) Start() error {
 	api.Use(echojwt.WithConfig(config))
 	api.GET("/blogs/recommendations", handlers.BlogsRecommendationHandler)
 	api.POST("/blogs/create", handlers.CreateNewBlogpostHandler)
-	api.GET("/blogs/:Username", handlers.GetBlogsByUsernameHandler)
+	api.GET("/blogs/:BlogID", handlers.GetBlogByBlogIDHandler)
+	api.GET("/blogs/users/:Username", handlers.GetBlogsByUsernameHandler)
 
 	e.Logger.Info("server has been started and running on", "port", s.co.PORT)
 	return e.Start(fmt.Sprintf(":%d", s.co.PORT))
