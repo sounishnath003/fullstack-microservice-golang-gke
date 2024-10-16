@@ -23,3 +23,8 @@ docker-build-push:
 	docker build -t $(DockerImageName) -f Dockerfile .
 	docker images
 	docker push $(DockerImageName)
+
+
+# kubectl create secret generic auth-service-secret \
+#   --from-literal=DSN="postgres://root:password@127.0.0.1:5432/auth?sslmode=disable" \
+#   -n "fullstack-microservice-golang"

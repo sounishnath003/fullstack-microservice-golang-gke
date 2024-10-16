@@ -1,4 +1,15 @@
 ---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "pgadmin-config-32pw"
+  namespace: "fullstack-microservice-golang"
+  labels:
+    app: "auth-service"
+data:
+  PGADMIN_DEFAULT_EMAIL: "a@a.com"
+  PGADMIN_DEFAULT_PASSWORD: "password"
+---
 apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
@@ -19,15 +30,20 @@ spec:
       containers:
       - name: "pgadmin"
         image: "dpage/pgadmin4"
+        env:
+        - name: "PGADMIN_DEFAULT_EMAIL"
+          valueFrom:
+            configMapKeyRef:
+              key: "PGADMIN_DEFAULT_EMAIL"
+              name: "pgadmin-config-32pw"
+
+        - name: "PGADMIN_DEFAULT_PASSWORD"
+          valueFrom:
+            configMapKeyRef:
+              key: "PGADMIN_DEFAULT_PASSWORD"
+              name: "pgadmin-config-32pw"
         ports:
         - containerPort: 80
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "256Mi"
-          limits:
-            cpu: "250m"
-            memory: "512Mi"
 ---
 apiVersion: "v1"
 kind: "Service"
@@ -39,9 +55,8 @@ metadata:
 spec:
   ports:
   - protocol: "TCP"
-    port: 80
+    port: 8080
     targetPort: 80
   selector:
     app: "pgadmin"
   type: "LoadBalancer"
----

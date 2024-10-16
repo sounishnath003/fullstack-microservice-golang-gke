@@ -52,3 +52,21 @@ spec:
       - name: cloudsql-connect-ksa-gsa-vol
         secret:
           secretName: cloudsql-connect-ksa-gsa
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-clousql-proxy-7tg4b
+  namespace: fullstack-microservice-golang
+spec:
+  ports:
+  - nodePort: 32200
+    port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: postgres-cloudsql-proxy
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}
