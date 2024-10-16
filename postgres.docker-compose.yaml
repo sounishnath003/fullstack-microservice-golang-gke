@@ -30,7 +30,7 @@ services:
       - 8080:80
 
   goauthservice:
-    image: asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/go-auth-service:v241000.3127
+    image: asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/go-auth-service:v241015.4731
     restart: always
     environment:
       AUTH_SERVICE_PORT: 3000
@@ -45,7 +45,7 @@ services:
         condition: service_healthy
 
   goblogsservice:
-    image: asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/go-blogs-service:v241000.3222
+    image: asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/go-blogs-service:v241015.4818
     restart: always
     environment:
       BLOGS_SERVICE_PORT: 3001

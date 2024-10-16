@@ -7,7 +7,7 @@ RUN go mod tidy
 RUN go mod download -x
 RUN go mod verify
 
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o /app/bin/goauthservice main.go
+RUN CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -ldflags "-s -w" -o /app/bin/goauthservice main.go
 
 
 FROM scratch

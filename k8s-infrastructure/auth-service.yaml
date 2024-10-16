@@ -1,88 +1,54 @@
----
-apiVersion: "v1"
-kind: "ConfigMap"
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: "auth-service-config-55di"
-  namespace: "fullstack-microservice-golang"
+  creationTimestamp: null
   labels:
-    app: "auth-service"
-data:
-  AUTH_SERVICE_PORT: "3000"
-  AUTH_SERVICE_DSN: "postgres://root:password@34.118.236.157:32200/auth?sslmode=disable"
-  AUTH_SERVICE_JWT_SECRET: "5u43r5Ec2Et%455W0r4!as&(!Q)"
----
-apiVersion: "apps/v1"
-kind: "Deployment"
-metadata:
-  name: "auth-service"
-  namespace: "fullstack-microservice-golang"
-  labels:
-    app: "auth-service"
+    app: auth-service
+  name: auth-service
+  namespace: fullstack-microservice-golang
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
-      app: "auth-service"
+      app: auth-service
+  strategy: {}
   template:
     metadata:
+      creationTimestamp: null
       labels:
-        app: "auth-service"
+        app: auth-service
     spec:
       containers:
-      - name: "go-auth-service-1"
-        image: "asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/go-auth-service:v241000.3127"
+      - image: asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/go-auth-service:v241015.4731
+        name: go-auth-service
+        ports:
+        - containerPort: 3000
         env:
-        - name: "AUTH_SERVICE_PORT"
-          valueFrom:
-            configMapKeyRef:
-              key: "AUTH_SERVICE_PORT"
-              name: "auth-service-config-55di"
-        - name: "AUTH_SERVICE_DSN"
-          valueFrom:
-            configMapKeyRef:
-              key: "AUTH_SERVICE_DSN"
-              name: "auth-service-config-55di"
-        - name: "AUTH_SERVICE_JWT_SECRET"
-          valueFrom:
-            configMapKeyRef:
-              key: "AUTH_SERVICE_JWT_SECRET"
-              name: "auth-service-config-55di"
+        - name: AUTH_SERVICE_PORT
+          value: "3000"
+        - name: AUTH_SERVICE_JWT_SECRET
+          value: "5u43r5Ec2Et%455W0r4!as&(!Q)"
+        - name: AUTH_SERVICE_DSN
+          value: "postgres://root:password@postgres-clousql-proxy-tnjx9:5432/auth?sslmode=disable"
+        resources: {}
+status: {}
 ---
-apiVersion: "autoscaling/v2"
-kind: "HorizontalPodAutoscaler"
+apiVersion: v1
+kind: Service
 metadata:
-  name: "auth-service-hpa-lsav"
-  namespace: "fullstack-microservice-golang"
+  creationTimestamp: null
   labels:
-    app: "auth-service"
-spec:
-  scaleTargetRef:
-    kind: "Deployment"
-    name: "auth-service"
-    apiVersion: "apps/v1"
-  minReplicas: 1
-  maxReplicas: 2
-  metrics:
-  - type: "Resource"
-    resource:
-      name: "cpu"
-      target:
-        type: "Utilization"
-        averageUtilization: 80
----
-apiVersion: "v1"
-kind: "Service"
-metadata:
-  name: "auth-service-service"
-  namespace: "fullstack-microservice-golang"
-  labels:
-    app: "auth-service"
+    app: auth-service
+  name: auth-service
+  namespace: fullstack-microservice-golang
 spec:
   ports:
-  - protocol: "TCP"
+  - name: "3000"
     port: 3000
+    protocol: TCP
     targetPort: 3000
   selector:
-    app: "auth-service"
-  type: "LoadBalancer"
-  loadBalancerIP: ""
+    app: auth-service
+  type: LoadBalancer
+status:
+  loadBalancer: {}

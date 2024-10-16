@@ -33,6 +33,7 @@ spec:
         image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.11.4
         args:
           - "--structured-logs"
+          - "--address=0.0.0.0"
           - "--port=5432"
           - "sounish-cloud-workstation:asia-south1:postgres-instance-demo"
           - "--credentials-file=/secrets/service_account.json"
@@ -60,13 +61,12 @@ metadata:
   namespace: fullstack-microservice-golang
 spec:
   ports:
-  - nodePort: 32200
     port: 5432
     protocol: TCP
     targetPort: 5432
   selector:
     app: postgres-cloudsql-proxy
   sessionAffinity: None
-  type: NodePort
+  type: ClusterIP
 status:
   loadBalancer: {}
