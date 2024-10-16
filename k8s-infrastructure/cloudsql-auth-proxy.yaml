@@ -1,0 +1,54 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Read more: https://cloud.google.com/sql/docs/postgres/connect-kubernetes-engine#service-account-key
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-clousql-proxy
+  namespace: "fullstack-microservice-golang"
+spec:
+  selector:
+    matchLabels:
+      app: postgres-cloudsql-proxy
+  template:
+    metadata:
+      labels:
+        app: postgres-cloudsql-proxy
+    spec:
+      containers:
+      - name: cloud-sql-proxy
+        image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.11.4
+        args:
+          - "--structured-logs"
+          - "--port=5432"
+          - "sounish-cloud-workstation:asia-south1:postgres-instance-demo"
+          - "--credentials-file=/secrets/service_account.json"
+        securityContext:
+          # The default Cloud SQL Auth Proxy image runs as the
+          # "nonroot" user and group (uid: 65532) by default.
+          runAsNonRoot: true
+        volumeMounts:
+        - name: cloudsql-connect-ksa-gsa-vol
+          mountPath: /secrets/
+          readOnly: true
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu:    "1"
+      volumes:
+      - name: cloudsql-connect-ksa-gsa-vol
+        secret:
+          secretName: cloudsql-connect-ksa-gsa

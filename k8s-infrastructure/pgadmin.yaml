@@ -1,0 +1,47 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "pgadmin-deployment"
+  namespace: "fullstack-microservice-golang"
+  labels:
+    app: "pgadmin"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "pgadmin"
+  template:
+    metadata:
+      labels:
+        app: "pgadmin"
+    spec:
+      containers:
+      - name: "pgadmin"
+        image: "dpage/pgadmin4"
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "250m"
+            memory: "512Mi"
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "pgadmin-service"
+  namespace: "fullstack-microservice-golang"
+  labels:
+    app: "pgadmin"
+spec:
+  ports:
+  - protocol: "TCP"
+    port: 80
+    targetPort: 80
+  selector:
+    app: "pgadmin"
+  type: "LoadBalancer"
+---
