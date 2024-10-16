@@ -37,6 +37,7 @@ func (s *Server) Start() error {
 	})
 	// Define other middlewares.
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		// AllowOrigins: []string{"*"},
 		AllowOrigins: []string{"http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:4200"},
 		AllowMethods: []string{echo.GET, echo.PUT, echo.PATCH, echo.POST},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},

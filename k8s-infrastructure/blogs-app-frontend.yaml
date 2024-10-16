@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: blogs-app-frontend
+  name: blogs-app-frontend
+  namespace: fullstack-microservice-golang
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: blogs-app-frontend
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: blogs-app-frontend
+    spec:
+      containers:
+      - image: asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/blogs-app-frontend:v241018.4730
+        name: blogs-app-frontend
+        env:
+        - name: NG_APP_AUTH_SERVICE_ENDPOINT
+          value: "http://34.160.24.38:80"
+        - name: NG_APP_BLOGS_SERVICE_ENDPOINT
+          value: "http://34.54.83.193:80"
+        ports:
+        - containerPort: 80
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: blogs-app-frontend
+  name: blogs-app-frontend
+  namespace: fullstack-microservice-golang
+spec:
+  ports:
+  - name: 4200-80
+    port: 4200
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: blogs-app-frontend
+  type: LoadBalancer
+status:
+  loadBalancer: {}

@@ -61,7 +61,7 @@ services:
         condition: service_healthy
 
   blogs-app-frontend:
-    image: asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/blogs-app-frontend:v241000.5219
+    image: asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/blogs-app-frontend:v241017.4409
     restart: always
     environment:
       NG_APP_AUTH_SERVICE_ENDPOINT: http://goauthservice:3000

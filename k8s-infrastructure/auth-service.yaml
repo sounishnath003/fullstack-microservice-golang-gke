@@ -19,7 +19,7 @@ spec:
         app: auth-service
     spec:
       containers:
-      - image: asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/go-auth-service:v241015.4731
+      - image: asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/go-auth-service:v241019.0455
         name: go-auth-service
         ports:
         - containerPort: 3000
@@ -49,6 +49,21 @@ spec:
     targetPort: 3000
   selector:
     app: auth-service
-  type: LoadBalancer
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+---
+apiVersion: "networking.k8s.io/v1"
+kind: "Ingress"
+metadata:
+  name: "auth-service-ingress"
+  namespace: "fullstack-microservice-golang"
+spec:
+  defaultBackend:
+    service:
+      name: "auth-service"
+      port:
+        number: 3000
 status:
   loadBalancer: {}

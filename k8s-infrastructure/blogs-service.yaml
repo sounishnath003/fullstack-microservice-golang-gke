@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: blog-service
+  name: blog-service
+  namespace: fullstack-microservice-golang
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: blog-service
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: blog-service
+    spec:
+      containers:
+      - image: asia-south1-docker.pkg.dev/sounish-cloud-workstation/fullstack-microservices-golang-gke/go-blogs-service:v241019.0503
+        name: go-blogs-service
+        env:
+        - name: BLOGS_SERVICE_PORT
+          value: "3001"
+        - name: AUTH_SERVICE_ENDPOINT
+          value: "http://auth-service:3000"
+        - name: BLOGS_SERVICE_DSN
+          value: "postgres://root:password@postgres-clousql-proxy-tnjx9:5432/blogs?sslmode=disable"
+        - name: AUTH_SERVICE_JWT_SECRET
+          value: 5u43r5Ec2Et%455W0r4!as&(!Q)
+        ports:
+        - containerPort: 3001
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: blog-service
+  name: blog-service
+  namespace: fullstack-microservice-golang
+spec:
+  ports:
+  - name: "3001"
+    port: 3001
+    protocol: TCP
+    targetPort: 3001
+  selector:
+    app: blog-service
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: "networking.k8s.io/v1"
+kind: "Ingress"
+metadata:
+  name: "blogs-service-ingress"
+  namespace: "fullstack-microservice-golang"
+spec:
+  defaultBackend:
+    service:
+      name: "blog-service"
+      port:
+        number: 3001
+status:
+  loadBalancer: {}
